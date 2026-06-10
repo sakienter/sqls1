@@ -475,3 +475,58 @@ td.empty-cell {
 #game-detail-table th:nth-child(3) {
   min-width: 120px;
 }
+
+
+/* ===== Total stats (summary table) ===== */
+
+#summary-table {
+  min-width: 1500px;
+}
+
+#summary-table th,
+#summary-table td {
+  text-align: center;
+}
+
+#summary-table .align-left {
+  text-align: left;
+}
+
+#summary-table .summary-group-header {
+  background: #c8d9eb;
+  color: #000;
+  font-weight: 900;
+  font-size: 18px;
+  border: 2px solid var(--line-strong);
+  padding: 8px 6px;
+}
+
+#summary-table .summary-header-cell {
+  background: #ffffff;
+  color: #000;
+  font-weight: 800;
+  padding: 8px 6px;
+}
+
+#summary-table .game20-header {
+  background: #ff2a2a;
+  color: #000;
+  font-style: italic;
+}
+
+#summary-table .summary-boundary-right {
+  border-right: 2px solid var(--line-strong) !important;
+}
+
+#summary-table tbody td {
+  min-width: 72px;
+}
+
+#summary-table tbody td.name-cell {
+  min-width: 160px;
+  font-weight: 800;
+}
+
+#summary-table tbody tr.winner-row td {
+  background: #fff46a;
+}

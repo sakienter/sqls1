@@ -451,3 +451,27 @@ td.empty-cell {
     padding: 9px 7px;
   }
 }
+
+
+/* ゲーム別詳細テーブルは中央揃え */
+#game-detail-table th,
+#game-detail-table td {
+  text-align: center;
+}
+
+/* 1列目(Name)も中央揃えにする */
+#game-detail-table td.name-cell,
+#game-detail-table th:first-child {
+  text-align: center;
+}
+
+/* HERO欄は改行しない */
+#game-detail-table td.hero-cell {
+  white-space: nowrap;
+}
+
+/* HERO列の幅が狭すぎて無理やり折り返されないように少し余裕を持たせる */
+#game-detail-table td.hero-cell,
+#game-detail-table th:nth-child(3) {
+  min-width: 120px;
+}

@@ -73,15 +73,117 @@ function renderPage(data) {
 }
 
 function renderSummary(summary) {
-  const columns = [
-    { label: 'Name', key: 'name', className: 'name-cell' },
-    { label: 'Point', key: 'point', className: 'number-cell total-cell' },
-    { label: '順位', key: 'rank', className: 'rank-cell' }
-  ];
+  renderSummaryTable(summary);
+}
 
-  renderObjectTable(elements.summaryTable, columns, summary?.rows || [], {
-    winnerByRank: true
+function renderSummaryTable(summary) {
+  const table = elements.summaryTable;
+  if (!table) return;
+
+  const thead = table.querySelector('thead');
+  const tbody = table.querySelector('tbody');
+
+  if (!thead || !tbody) return;
+
+  thead.innerHTML = '';
+  tbody.innerHTML = '';
+
+  const groupHeaders = summary?.groupHeaders || [];
+  const headers = summary?.headers || [];
+  const rows = summary?.rows || [];
+
+  if (groupHeaders.length > 0) {
+    const groupRow = document.createElement('tr');
+    groupRow.className = 'summary-group-row';
+
+    groupHeaders.forEach(group => {
+      const th = document.createElement('th');
+      th.textContent = group.label;
+      th.colSpan = group.span;
+      th.className = 'summary-group-header';
+      groupRow.appendChild(th);
+    });
+
+    thead.appendChild(groupRow);
+  }
+
+  if (headers.length === 0) {
+    const tr = document.createElement('tr');
+    const th = document.createElement('th');
+    th.textContent = 'データがありません';
+    tr.appendChild(th);
+    thead.appendChild(tr);
+    return;
+  }
+
+  const headerRow = document.createElement('tr');
+
+  headers.forEach(header => {
+    const th = document.createElement('th');
+    th.textContent = header.label;
+    th.className = 'summary-header-cell';
+
+    if (header.key === 'name') {
+      th.classList.add('align-left');
+    } else {
+      th.classList.add('align-center');
+    }
+
+    if (header.isGame20) {
+      th.classList.add('game20-header');
+    }
+
+    if (isSummaryBoundaryKey(header.key)) {
+      th.classList.add('summary-boundary-right');
+    }
+
+    headerRow.appendChild(th);
   });
+
+  thead.appendChild(headerRow);
+
+  if (!rows || rows.length === 0) {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = headers.length;
+    td.className = 'empty-cell';
+    td.textContent = 'データがありません';
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  rows.forEach(row => {
+    const tr = document.createElement('tr');
+
+    if (String(row.ptRank).trim().toLowerCase() === '1st') {
+      tr.classList.add('winner-row');
+    }
+
+    headers.forEach(header => {
+      const td = document.createElement('td');
+      td.textContent = formatCellValue(row[header.key]);
+
+      if (header.key === 'name') {
+        td.classList.add('name-cell', 'align-left');
+      } else {
+        td.classList.add('align-center');
+      }
+
+      if (isSummaryBoundaryKey(header.key)) {
+        td.classList.add('summary-boundary-right');
+      }
+
+      tbody.appendChild;
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+}
+
+function isSummaryBoundaryKey(key) {
+  return ['ptRank', 'game5', 'game10', 'game15', 'game20'].includes(key);
 }
 
 function renderDayTabs(days) {

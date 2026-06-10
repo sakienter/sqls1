@@ -30,6 +30,8 @@ const elements = {
 init();
 
 async function init() {
+  startLoadingDots();
+
   try {
     setStatus('読み込み中...');
 
@@ -51,7 +53,27 @@ async function init() {
     console.error(error);
     setStatus('読み込みに失敗しました');
     renderError(error);
+  } finally {
+    hideLoadingOverlay();
   }
+}
+
+function startLoadingDots() {
+  const el = document.getElementById('ld-dots');
+  if (!el) return;
+  let i = 0;
+  const frames = ['', '.', '..', '...'];
+  window._ldTimer = setInterval(() => {
+    el.textContent = frames[i++ % frames.length];
+  }, 400);
+}
+
+function hideLoadingOverlay() {
+  const overlay = document.getElementById('loading-overlay');
+  if (!overlay) return;
+  clearInterval(window._ldTimer);
+  overlay.classList.add('hidden');
+  setTimeout(() => overlay.remove(), 500);
 }
 
 function renderPage(data) {

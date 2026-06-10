@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>S級リーグS1</title>
-  <meta name="description" content="S級リーグS1の大会結果ページです。Googleスプレッドシート由来のデータをJSONとして読み込み、公開用の表として表示します。" />
+  <meta
+    name="description"
+    content="S級リーグS1の大会結果ページです。Googleスプレッドシート由来のデータをJSONとして読み込み、公開用の表として表示します。"
+  />
 
   <meta property="og:title" content="S級リーグS1" />
   <meta property="og:description" content="スプレッドシート風の大会結果公開ページ" />
@@ -22,7 +25,7 @@
       <h1 id="event-title">S級リーグS1</h1>
 
       <p class="lead">
-        Googleスプレッドシートで編集した大会結果をJSONとして読み込み、公開用の表として表示しています。
+        S級リーグS1の総合結果と、各DAYの試合結果を掲載しています。
       </p>
 
       <div class="meta-line">
@@ -32,10 +35,10 @@
     </header>
 
     <section class="score-card">
-      <div class="section-title purple">ポイント集計</div>
+      <div class="section-title purple">総合順位</div>
 
       <div class="table-wrap">
-        <table id="points-table" aria-label="ポイント集計表">
+        <table id="summary-table" aria-label="総合順位表">
           <thead></thead>
           <tbody></tbody>
         </table>
@@ -43,14 +46,47 @@
     </section>
 
     <section class="score-card">
-      <div class="section-title orange">順位集計</div>
+      <div class="section-title orange">DAY別結果</div>
 
-      <div class="table-wrap">
-        <table id="placements-table" aria-label="順位集計表">
-          <thead></thead>
-          <tbody></tbody>
-        </table>
+      <div id="day-tabs" class="day-tabs" aria-label="DAY切り替え"></div>
+
+      <div class="day-current">
+        <p class="day-kicker">Selected Day</p>
+        <h2 id="day-title">DAY1</h2>
       </div>
+
+      <section class="day-section">
+        <div class="mini-section-title">Daily Score</div>
+
+        <div class="table-wrap">
+          <table id="daily-score-table" aria-label="日別スコア表">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="day-section">
+        <div class="mini-section-title">ポイント集計</div>
+
+        <div class="table-wrap">
+          <table id="day-points-table" aria-label="DAY別ポイント集計表">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="day-section">
+        <div class="mini-section-title">順位入力</div>
+
+        <div class="table-wrap">
+          <table id="day-placements-table" aria-label="DAY別順位入力表">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
     </section>
 
     <footer class="footer-note">

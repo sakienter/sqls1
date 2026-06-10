@@ -7,11 +7,11 @@
   <title>S級リーグS1</title>
   <meta
     name="description"
-    content="S級リーグS1の大会結果ページです。Googleスプレッドシート由来のデータをJSONとして読み込み、公開用の表として表示します。"
+    content="S級リーグS1の総合結果と各DAY・各GAMEの試合結果を見やすく掲載する大会結果ページです。"
   />
 
   <meta property="og:title" content="S級リーグS1" />
-  <meta property="og:description" content="スプレッドシート風の大会結果公開ページ" />
+  <meta property="og:description" content="S級リーグS1の大会結果ページ" />
   <meta property="og:type" content="website" />
 
   <link rel="stylesheet" href="./style.css" />
@@ -19,21 +19,27 @@
 
 <body>
   <div id="loading-overlay" aria-live="polite" aria-label="読み込み中">
-    <div class="loading-logo">S級リーグ S1</div>
-    <div class="loading-track">
-      <div class="loading-bar"></div>
+    <div class="loading-card">
+      <div class="loading-logo">S級リーグ S1</div>
+
+      <div class="loading-track">
+        <div class="loading-bar"></div>
+      </div>
+
+      <div class="loading-label">
+        結果データを読み込んでいます<span id="ld-dots"></span>
+      </div>
     </div>
-    <div class="loading-label">Loading data<span id="ld-dots"></span></div>
   </div>
 
   <main class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Result</p>
+      <p class="eyebrow">Tournament Result</p>
 
       <h1 id="event-title">S級リーグS1</h1>
 
       <p class="lead">
-        S級リーグS1の総合結果と、各DAYの試合結果を掲載しています。
+        総合結果と各DAY・各GAMEの試合結果を掲載しています。
       </p>
 
       <div class="meta-line">
@@ -42,7 +48,7 @@
       </div>
     </header>
 
-    <section class="score-card">
+    <section class="score-card summary-card">
       <div class="section-title purple">Total Score</div>
 
       <div class="table-wrap">
@@ -53,7 +59,7 @@
       </div>
     </section>
 
-    <section class="score-card">
+    <section class="score-card day-card">
       <div class="section-title orange">DAY別結果</div>
 
       <div id="day-tabs" class="day-tabs" aria-label="DAY切り替え"></div>
@@ -125,10 +131,7 @@
     </section>
 
     <footer class="footer-note">
-      <p>
-        Googleスプレッドシート → Apps Script →
-        <code>/api/results</code> → この画面、という流れで表示しています。
-      </p>
+      <p>S級リーグS1 Result Page</p>
     </footer>
   </main>
 

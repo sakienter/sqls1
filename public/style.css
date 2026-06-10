@@ -530,3 +530,101 @@ td.empty-cell {
 #summary-table tbody tr.winner-row td {
   background: #fff46a;
 }
+
+/* ===== Total stats を横スクロールなしで収める ===== */
+
+#summary-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+/* Total stats の表だけコンパクト化 */
+#summary-table th,
+#summary-table td {
+  padding: 6px 4px;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Name列だけ少し広く */
+#summary-table th:nth-child(1),
+#summary-table td:nth-child(1) {
+  width: 120px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+/* Total Pt */
+#summary-table th:nth-child(2),
+#summary-table td:nth-child(2) {
+  width: 62px;
+  font-weight: 900;
+}
+
+/* Pt順位 */
+#summary-table th:nth-child(3),
+#summary-table td:nth-child(3) {
+  width: 58px;
+  font-weight: 900;
+}
+
+/* game1〜game20 */
+#summary-table th:nth-child(n+4),
+#summary-table td:nth-child(n+4) {
+  width: calc((100% - 240px) / 20);
+  min-width: 0;
+  font-size: 12px;
+}
+
+/* 2段目の Day見出しも少し小さく */
+#summary-table .summary-group-header {
+  padding: 6px 4px;
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+/* game20の赤ヘッダー */
+#summary-table .game20-header {
+  background: #ff2a2a;
+  color: #000;
+  font-style: italic;
+  font-weight: 900;
+}
+
+/* Total stats の外側はスクロールを出さない */
+.score-card:first-of-type .table-wrap {
+  overflow-x: visible;
+}
+
+/* 画面が狭い場合はさらに圧縮 */
+@media (max-width: 900px) {
+  #summary-table th,
+  #summary-table td {
+    padding: 5px 2px;
+    font-size: 10px;
+  }
+
+  #summary-table th:nth-child(1),
+  #summary-table td:nth-child(1) {
+    width: 88px;
+    font-size: 11px;
+  }
+
+  #summary-table th:nth-child(2),
+  #summary-table td:nth-child(2) {
+    width: 48px;
+  }
+
+  #summary-table th:nth-child(3),
+  #summary-table td:nth-child(3) {
+    width: 46px;
+  }
+
+  #summary-table .summary-group-header {
+    font-size: 12px;
+  }
+}

@@ -2,6 +2,7 @@ const API_URL = '/api/results';
 
 let loadedData = null;
 let selectedDayIndex = 0;
+let selectedGameIndex = 0;
 
 const elements = {
   eventTitle: document.getElementById('event-title'),
@@ -9,12 +10,21 @@ const elements = {
   updatedAt: document.getElementById('updated-at'),
 
   summaryTable: document.getElementById('summary-table'),
+
   dayTabs: document.getElementById('day-tabs'),
   dayTitle: document.getElementById('day-title'),
 
   dailyScoreTable: document.getElementById('daily-score-table'),
   dayPointsTable: document.getElementById('day-points-table'),
-  dayPlacementsTable: document.getElementById('day-placements-table')
+  dayPlacementsTable: document.getElementById('day-placements-table'),
+
+  gameTabs: document.getElementById('game-tabs'),
+  gameTitle: document.getElementById('game-title'),
+  gameStartTime: document.getElementById('game-start-time'),
+  gameEndTime: document.getElementById('game-end-time'),
+  gameBan: document.getElementById('game-ban'),
+  gameAnomaly: document.getElementById('game-anomaly'),
+  gameDetailTable: document.getElementById('game-detail-table')
 };
 
 init();
@@ -40,7 +50,6 @@ async function init() {
   } catch (error) {
     console.error(error);
     setStatus('読み込みに失敗しました');
-
     renderError(error);
   }
 }
@@ -66,7 +75,7 @@ function renderPage(data) {
 function renderSummary(summary) {
   const columns = [
     { label: 'Name', key: 'name', className: 'name-cell' },
-    { label: 'Point', key: 'point', className: 'number-cell' },
+    { label: 'Point', key: 'point', className: 'number-cell total-cell' },
     { label: '順位', key: 'rank', className: 'rank-cell' }
   ];
 
@@ -84,15 +93,14 @@ function renderDayTabs(days) {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'day-tab';
-    button.dataset.index = String(index);
 
     if (index === selectedDayIndex) {
       button.classList.add('active');
     }
 
     button.innerHTML = `
-      <span class="day-tab-label">${escapeHtml(day.label || `DAY${index + 1}`)}</span>
-      <span class="day-tab-date">${escapeHtml(day.date || '')}</span>
+      <span class="tab-main">${escapeHtml(day.label || `DAY${index + 1}`)}</span>
+      <span class="tab-sub">${escapeHtml(day.date || '')}</span>
     `;
 
     button.addEventListener('click', () => {
@@ -107,6 +115,7 @@ function renderSelectedDay(index) {
   if (!loadedData || !loadedData.days || !loadedData.days[index]) return;
 
   selectedDayIndex = index;
+  selectedGameIndex = 0;
 
   const day = loadedData.days[index];
 
@@ -121,6 +130,8 @@ function renderSelectedDay(index) {
   renderDailyScore(day);
   renderDayPoints(day);
   renderDayPlacements(day);
+  renderGameTabs(day);
+  renderSelectedGame(0);
 }
 
 function updateActiveDayTab() {
@@ -136,7 +147,7 @@ function updateActiveDayTab() {
 function renderDailyScore(day) {
   const columns = [
     { label: 'Name', key: 'name', className: 'name-cell' },
-    { label: 'Point', key: 'point', className: 'number-cell' },
+    { label: 'Point', key: 'point', className: 'number-cell total-cell' },
     { label: '順位', key: 'rank', className: 'rank-cell' }
   ];
 
@@ -152,8 +163,8 @@ function renderDayPoints(day) {
     { label: 'Name', key: 'name', className: 'name-cell' },
     { label: 'Daily Total', key: 'dailyTotal', className: 'number-cell total-cell' },
     { label: '順位', key: 'rank', className: 'rank-cell' },
-    ...games.map(game => ({
-      label: game,
+    ...games.map((game, index) => ({
+      label: `game${index + 1}`,
       key: game,
       className: 'number-cell game-cell'
     }))
@@ -171,14 +182,128 @@ function renderDayPlacements(day) {
     { label: 'Name', key: 'name', className: 'name-cell' },
     { label: '1st count', key: 'firstCount', className: 'number-cell' },
     { label: 'average', key: 'average', className: 'number-cell' },
-    ...games.map(game => ({
-      label: game,
+    ...games.map((game, index) => ({
+      label: `game${index + 1}`,
       key: game,
       className: 'number-cell game-cell'
     }))
   ];
 
   renderObjectTable(elements.dayPlacementsTable, columns, day.placements?.rows || [], {});
+}
+
+function renderGameTabs(day) {
+  if (!elements.gameTabs) return;
+
+  elements.gameTabs.innerHTML = '';
+
+  const gameDetails = day.gameDetails || [];
+
+  gameDetails.forEach((game, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'game-tab';
+
+    if (index === selectedGameIndex) {
+      button.classList.add('active');
+    }
+
+    button.innerHTML = `
+      <span class="tab-main">${escapeHtml(game.label || `GAME${index + 1}`)}</span>
+      <span class="tab-sub">${escapeHtml(formatGameTimeShort(game))}</span>
+    `;
+
+    button.addEventListener('click', () => {
+      renderSelectedGame(index);
+    });
+
+    elements.gameTabs.appendChild(button);
+  });
+}
+
+function renderSelectedGame(index) {
+  if (!loadedData || !loadedData.days || !loadedData.days[selectedDayIndex]) return;
+
+  const day = loadedData.days[selectedDayIndex];
+  const gameDetails = day.gameDetails || [];
+
+  selectedGameIndex = index;
+
+  updateActiveGameTab();
+
+  if (!gameDetails[index]) {
+    renderGameMeta(null);
+    renderGameDetailTable([]);
+    return;
+  }
+
+  const game = gameDetails[index];
+
+  renderGameMeta(game);
+  renderGameDetailTable(game.rows || []);
+}
+
+function updateActiveGameTab() {
+  if (!elements.gameTabs) return;
+
+  const buttons = elements.gameTabs.querySelectorAll('.game-tab');
+
+  buttons.forEach((button, index) => {
+    button.classList.toggle('active', index === selectedGameIndex);
+  });
+}
+
+function renderGameMeta(game) {
+  if (!game) {
+    if (elements.gameTitle) elements.gameTitle.textContent = 'GAME';
+    if (elements.gameStartTime) elements.gameStartTime.textContent = '開始: -';
+    if (elements.gameEndTime) elements.gameEndTime.textContent = '終了: -';
+    if (elements.gameBan) elements.gameBan.textContent = 'BAN: -';
+    if (elements.gameAnomaly) elements.gameAnomaly.textContent = '異常: -';
+    return;
+  }
+
+  if (elements.gameTitle) {
+    elements.gameTitle.textContent = game.label || 'GAME';
+  }
+
+  if (elements.gameStartTime) {
+    elements.gameStartTime.textContent = `開始: ${game.startTime || '-'}`;
+  }
+
+  if (elements.gameEndTime) {
+    elements.gameEndTime.textContent = `終了: ${game.endTime || '-'}`;
+  }
+
+  if (elements.gameBan) {
+    const banText = Array.isArray(game.ban) && game.ban.length > 0
+      ? game.ban.join(' / ')
+      : '-';
+
+    elements.gameBan.textContent = `BAN: ${banText}`;
+  }
+
+  if (elements.gameAnomaly) {
+    elements.gameAnomaly.textContent = `異常: ${game.anomaly || '-'}`;
+  }
+}
+
+function renderGameDetailTable(rows) {
+  const columns = [
+    { label: 'Name', key: 'name', className: 'name-cell' },
+    { label: '順位', key: 'placement', className: 'number-cell rank-cell' },
+    { label: 'HERO', key: 'hero', className: 'text-cell' },
+    { label: 'COMP', key: 'comp', className: 'text-cell wide-cell' },
+    { label: 'Lesser 1', key: 'lesser1', className: 'text-cell wide-cell' },
+    { label: 'Lesser 2', key: 'lesser2', className: 'text-cell wide-cell' },
+    { label: 'Greater 1', key: 'greater1', className: 'text-cell wide-cell' },
+    { label: 'Greater 2', key: 'greater2', className: 'text-cell wide-cell' },
+    { label: 'Info', key: 'info', className: 'text-cell wide-cell' }
+  ];
+
+  renderObjectTable(elements.gameDetailTable, columns, rows || [], {
+    winnerByPlacement: true
+  });
 }
 
 function renderObjectTable(table, columns, rows, options = {}) {
@@ -222,6 +347,10 @@ function renderObjectTable(table, columns, rows, options = {}) {
       tr.classList.add('winner-row');
     }
 
+    if (options.winnerByPlacement && Number(row.placement) === 1) {
+      tr.classList.add('winner-row');
+    }
+
     columns.forEach(column => {
       const td = document.createElement('td');
       td.className = column.className || '';
@@ -230,7 +359,7 @@ function renderObjectTable(table, columns, rows, options = {}) {
 
       td.textContent = formatCellValue(value);
 
-      if (isFirstRank(value)) {
+      if (isFirstRank(value) || Number(value) === 1 && column.key === 'placement') {
         td.classList.add('first-rank-cell');
       }
 
@@ -248,7 +377,8 @@ function renderError(error) {
     elements.summaryTable,
     elements.dailyScoreTable,
     elements.dayPointsTable,
-    elements.dayPlacementsTable
+    elements.dayPlacementsTable,
+    elements.gameDetailTable
   ];
 
   tables.forEach(table => {
@@ -299,6 +429,20 @@ function formatDateTime(value) {
     hour: '2-digit',
     minute: '2-digit'
   }).format(date);
+}
+
+function formatGameTimeShort(game) {
+  if (!game) return '';
+
+  if (game.startTime && game.endTime) {
+    return `${game.startTime}-${game.endTime}`;
+  }
+
+  if (game.startTime) {
+    return game.startTime;
+  }
+
+  return '';
 }
 
 function isFirstRank(value) {

@@ -292,7 +292,7 @@ function renderGameDetailTable(rows) {
   const columns = [
     { label: 'Name', key: 'name', className: 'name-cell' },
     { label: '順位', key: 'placement', className: 'number-cell rank-cell' },
-    { label: 'HERO', key: 'hero', className: 'text-cell' },
+    { label: 'HERO', key: 'hero', className: 'text-cell hero-cell' },
     { label: 'COMP', key: 'comp', className: 'text-cell wide-cell' },
     { label: 'Lesser 1', key: 'lesser1', className: 'text-cell wide-cell' },
     { label: 'Lesser 2', key: 'lesser2', className: 'text-cell wide-cell' },

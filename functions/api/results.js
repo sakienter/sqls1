@@ -13,8 +13,19 @@ export async function onRequest(context) {
         days: [],
         error: 'GAS_URL is not set'
       },
-      500
+      500,
+      {
+        'Cache-Control': 'no-store'
+      }
     );
+  }
+
+  const cache = caches.default;
+  const cacheKey = new Request(context.request.url, context.request);
+
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) {
+    return cachedResponse;
   }
 
   try {
@@ -36,13 +47,22 @@ export async function onRequest(context) {
           days: [],
           error: `Apps Script error: ${response.status}`
         },
-        502
+        502,
+        {
+          'Cache-Control': 'no-store'
+        }
       );
     }
 
     const data = await response.json();
 
-    return jsonResponse(data, 200);
+    const result = jsonResponse(data, 200, {
+      'Cache-Control': 'public, max-age=30, s-maxage=120, stale-while-revalidate=300'
+    });
+
+    context.waitUntil(cache.put(cacheKey, result.clone()));
+
+    return result;
   } catch (error) {
     return jsonResponse(
       {
@@ -55,17 +75,20 @@ export async function onRequest(context) {
         days: [],
         error: String(error && error.message ? error.message : error)
       },
-      500
+      500,
+      {
+        'Cache-Control': 'no-store'
+      }
     );
   }
 }
 
-function jsonResponse(data, status) {
+function jsonResponse(data, status, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': 'no-store'
+      ...extraHeaders
     }
   });
 }

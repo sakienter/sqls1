@@ -5,20 +5,24 @@
   --text-main: #18181b;
   --text-sub: #5f6472;
   --line: #d9d9e3;
-  --line-strong: #2b2b2b;
+  --line-strong: #252525;
 
   --purple-main: #b300ff;
   --purple-dark: #7b00ff;
 
-  --orange-main: #ff8300;
-  --orange-dark: #ff5e00;
+  --orange-main: #ff8900;
+  --orange-dark: #ff6400;
 
-  --winner-bg: #f5ea63;
-  --tab-bg: #f2f2f7;
+  --winner-bg: #fff46a;
+  --header-bg: #f1f1f4;
+  --row-alt: #fafafc;
+
+  --tab-bg: #f3f3f7;
   --tab-active-bg: #18181b;
   --tab-active-text: #ffffff;
 
-  --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+
   --radius-lg: 18px;
   --radius-md: 12px;
   --radius-sm: 8px;
@@ -50,7 +54,7 @@ body {
 }
 
 .page-shell {
-  max-width: 1120px;
+  max-width: 1160px;
   margin: 0 auto;
   padding: 48px 20px 72px;
 }
@@ -62,7 +66,7 @@ body {
 .eyebrow {
   margin: 0 0 8px;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 900;
   letter-spacing: 0.08em;
   color: var(--purple-dark);
   text-transform: uppercase;
@@ -70,15 +74,15 @@ body {
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(40px, 6vw, 64px);
+  font-size: clamp(42px, 6vw, 66px);
   line-height: 1.05;
   font-weight: 900;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
 }
 
 .lead {
-  margin: 12px 0 0;
-  font-size: 18px;
+  margin: 14px 0 0;
+  font-size: 17px;
   line-height: 1.7;
   color: var(--text-sub);
 }
@@ -95,9 +99,9 @@ body {
   align-items: center;
   min-height: 34px;
   padding: 0 14px;
-  border: 1px solid #ddd;
+  border: 1px solid #ddddE6;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.72);
   color: var(--text-sub);
   font-size: 14px;
 }
@@ -113,7 +117,7 @@ body {
 
 .section-title {
   padding: 18px 20px;
-  font-size: clamp(28px, 3.2vw, 48px);
+  font-size: clamp(30px, 3.3vw, 48px);
   font-weight: 900;
   line-height: 1.15;
   text-align: center;
@@ -129,16 +133,23 @@ body {
   background: linear-gradient(180deg, var(--orange-main), var(--orange-dark));
 }
 
-.day-tabs {
+.day-tabs,
+.game-tabs {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
   padding: 18px 18px 8px;
-  border-bottom: 1px solid var(--line);
   background: #fffaf5;
+  border-bottom: 1px solid var(--line);
 }
 
-.day-tab {
+.game-tabs {
+  padding-top: 8px;
+  background: #ffffff;
+}
+
+.day-tab,
+.game-tab {
   appearance: none;
   border: 1px solid #d8d8dd;
   background: var(--tab-bg);
@@ -160,25 +171,27 @@ body {
   gap: 2px;
 }
 
-.day-tab:hover {
+.day-tab:hover,
+.game-tab:hover {
   transform: translateY(-1px);
   border-color: #999;
 }
 
-.day-tab.active {
+.day-tab.active,
+.game-tab.active {
   background: var(--tab-active-bg);
   color: var(--tab-active-text);
   border-color: var(--tab-active-bg);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
 }
 
-.day-tab-label {
+.tab-main {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 900;
   line-height: 1.1;
 }
 
-.day-tab-date {
+.tab-sub {
   font-size: 12px;
   opacity: 0.85;
   line-height: 1.1;
@@ -188,13 +201,14 @@ body {
   padding: 18px 20px 8px;
 }
 
-.day-kicker {
+.day-kicker,
+.game-kicker {
   margin: 0;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
   color: var(--text-sub);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
 .day-current h2 {
@@ -209,32 +223,79 @@ body {
 }
 
 .mini-section-title {
-  margin: 12px 20px 10px;
-  font-size: 20px;
+  margin: 16px 20px 10px;
+  font-size: 21px;
   line-height: 1.2;
-  font-weight: 800;
+  font-weight: 900;
   color: var(--text-main);
+}
+
+.game-detail-section {
+  border-top: 2px solid var(--line-strong);
+  margin-top: 8px;
+  padding-top: 4px;
+  background: #fff;
+}
+
+.game-current {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 20px 12px;
+}
+
+.game-current h3 {
+  margin: 6px 0 0;
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.game-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: 720px;
+}
+
+.game-meta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 11px;
+  border-radius: 999px;
+  background: #f3f3f7;
+  color: var(--text-main);
+  border: 1px solid #d8d8dd;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .table-wrap {
   width: 100%;
   overflow-x: auto;
-  padding: 0 0 2px;
+  padding: 0;
 }
 
 table {
   width: 100%;
-  min-width: 720px;
+  min-width: 760px;
   border-collapse: collapse;
   table-layout: auto;
   background: #fff;
 }
 
+#game-detail-table {
+  min-width: 1120px;
+}
+
 thead th {
-  background: #f1f1f4;
+  background: var(--header-bg);
   color: var(--text-main);
-  font-weight: 800;
-  font-size: 15px;
+  font-weight: 900;
+  font-size: 14px;
   padding: 10px 8px;
   border: 1px solid #bfc3cb;
   white-space: nowrap;
@@ -243,13 +304,14 @@ thead th {
 tbody td {
   padding: 10px 8px;
   border: 1px solid #cfd3da;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.35;
   background: #fff;
+  vertical-align: top;
 }
 
 tbody tr:nth-child(even) td {
-  background: #fafafc;
+  background: var(--row-alt);
 }
 
 tbody tr.winner-row td {
@@ -258,14 +320,30 @@ tbody tr.winner-row td {
 
 td.name-cell,
 th:first-child {
-  font-weight: 800;
+  font-weight: 900;
   text-align: left;
 }
 
 td.number-cell,
-td.rank-cell,
+td.rank-cell {
+  text-align: right;
+}
+
 th {
   text-align: right;
+}
+
+th:first-child {
+  text-align: left;
+}
+
+td.text-cell {
+  text-align: left;
+}
+
+td.wide-cell {
+  min-width: 140px;
+  white-space: normal;
 }
 
 td.first-rank-cell {
@@ -273,12 +351,12 @@ td.first-rank-cell {
 }
 
 td.total-cell {
-  font-weight: 800;
+  font-weight: 900;
 }
 
 td.empty-cell {
   text-align: center;
-  padding: 20px;
+  padding: 22px;
   color: var(--text-sub);
 }
 
@@ -317,14 +395,25 @@ td.empty-cell {
     font-size: 18px;
   }
 
-  .day-current {
+  .day-current,
+  .game-current {
     padding-left: 14px;
     padding-right: 14px;
   }
 
-  .day-tabs {
+  .day-tabs,
+  .game-tabs {
     padding-left: 14px;
     padding-right: 14px;
+  }
+
+  .game-current {
+    display: block;
+  }
+
+  .game-meta {
+    justify-content: flex-start;
+    margin-top: 12px;
   }
 }
 
@@ -343,17 +432,22 @@ td.empty-cell {
     font-size: 28px;
   }
 
-  .day-current h2 {
+  .day-current h2,
+  .game-current h3 {
     font-size: 28px;
   }
 
   table {
-    min-width: 640px;
+    min-width: 660px;
+  }
+
+  #game-detail-table {
+    min-width: 1040px;
   }
 
   thead th,
   tbody td {
-    font-size: 14px;
+    font-size: 13px;
     padding: 9px 7px;
   }
 }

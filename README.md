@@ -1,4 +1,4 @@
-# CNvsWorld Cloudflare Pages Demo
+# S級リーグS1
 
 Googleスプレッドシートで編集した大会結果を、JSON経由でCloudflare Pagesに表示するための最小デモです。
 
